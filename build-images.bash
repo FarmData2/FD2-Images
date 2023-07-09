@@ -72,7 +72,15 @@ do
     TAG=$(cat repo.txt)
     REPO="$DOCKER_HUB_USER/$TAG"
     echo "  Performing docker build using tag $REPO ..."
-    docker buildx build --platform $PLATFORMS -t $REPO --push .
+
+    if [ $LOCAL_BUILD == 1 ];
+    then
+      echo "  Building image locally."
+      docker build  -t $REPO .
+    else
+      echo "  Building multi architecture image and pushing to dockerhub."
+      docker buildx build --platform $PLATFORMS -t $REPO --push .
+    fi
 
     if [ -f after.bash ];
     then
