@@ -20,7 +20,7 @@
 
 clear
 
-DOCKER_GID=$(cat ~/.contconf/gids/docker.gid)
+DOCKER_GID=$(cat ~/.fd2/gids/docker.gid)
 DOCKER_GROUP=$(getent group $DOCKER_GID | cut -d':' -f1)
 
 USER_IN_DOCKER_GRP=$(groups | grep "$DOCKER_GROUP")

@@ -28,31 +28,6 @@ ENV DONT_PROMPT_WSL_INSTALL=1
  RUN ./docker.bash \
   && rm docker.bash
 
-# Create the "fd2dev" user and "fd2grp" group in the container.
-# All files and directories for fd2dev, both on the host and in the
-# container will be assigned to this group. In addition, all new files 
-# and directories created by fd2dev in the container will belong to this group.  
-# This is done to ensure that the fd2dev user in the container can edit the
-# files mounted from the host when the host is a Linux OS.  Note: This is
-# not necessary on Windows or MacOS but the container side behaves this way
-# on those hosts as well for consistency.
-#
-# The GID for the fd2grp group is read from the dev/fd2grp.gid file.  
-# That allows the GID to be easily changed in the event that a group with 
-# that GID already exists on the host. This is handled in docker/fd2-up.bash.  
-# We also ensure that the fd2dev user's primary group has the same GID so that
-# new files and dirs are created with the right permissions.
-# NOTE: These ARGS are used here, but may be hard coded in other
-#       files in this dev directory.  Change them with caution.
-ARG USERNAME=fd2dev
-ARG PASSWD=fd2dev
-ARG GROUP=fd2grp
-COPY ./fd2grp.gid .
-RUN groupadd --gid $(cat ./fd2grp.gid) $GROUP \
-  && usermod -g "$GROUP" "$USERNAME" \
-  && usermod -a -G "$USERNAME" "$USERNAME" \
-  && rm ./fd2grp.gid
-
 # Modify the default umask for the sytsem so that when files
 # or directories are created the group has RW permisison as
 # well as the owner.  That will ensure tha that any new files
@@ -62,8 +37,8 @@ COPY ./umask.bash .
 RUN ./umask.bash \
  && rm ./umask.bash
 
-USER $USERNAME
-WORKDIR /home/$USERNAME
+USER fd2dev
+WORKDIR /home/fd2dev
 
 # Install some useful VSCodium extensions
 RUN codium --install-extension vue.volar \
