@@ -1,4 +1,4 @@
-FROM farmdata2/fd2-vnc-novnc-base:1.2.0
+FROM farmdata2/fd2-vnc-novnc-base:1.2.1
 
 USER root
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh \
