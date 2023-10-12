@@ -34,6 +34,11 @@ ENV DONT_PROMPT_WSL_INSTALL=1
  RUN ./docker.bash \
   && rm docker.bash
 
+# Install the GitHub CLI tools.
+COPY gh.bash .
+RUN ./gh.bash \
+  && rm gh.bash
+
 # Modify the default umask for the sytsem so that when files
 # or directories are created the group has RW permisison as
 # well as the owner.  That will ensure tha that any new files
