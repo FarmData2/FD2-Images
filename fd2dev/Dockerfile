@@ -1,6 +1,13 @@
 FROM farmdata2/fd2-vnc-novnc-base:1.2.1
 
 USER root
+
+# Install some additional system software
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \ 
+     build-essential
+
+# Install node/npm
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh \
   && bash /tmp/nodesource_setup.sh \
   && apt install nodejs \
@@ -22,8 +29,7 @@ RUN cd /usr/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384} \
 ENV DONT_PROMPT_WSL_INSTALL=1
 
 # Install Docker because we use Docker On Docker to allow some scripts
-# (e.g. docker/setDB.bash and buildSampleDB.bash) to stop and start 
-# containers.
+# to stop and start containers.
  COPY docker.bash .
  RUN ./docker.bash \
   && rm docker.bash
@@ -40,7 +46,8 @@ RUN ./umask.bash \
 USER fd2dev
 WORKDIR /home/fd2dev
 
-# Install some useful VSCodium extensions
+# Install some additional VSCodium extensions
+# Code Spell Check and Markdown preview are in base image.
 RUN codium --install-extension vue.volar \
   && codium --install-extension dbaeumer.vscode-eslint \
   && codium --install-extension esbenp.prettier-vscode \
@@ -63,6 +70,15 @@ RUN cat ./bashrc_addition >> .bashrc \
 # for the FarmData2 repo and the fd2test directories and starts the VNC and noVNC
 # servers.
 COPY --chown=$USERNAME:$USERNAME --chmod=755 ./startup.bash ./.contconf/startup.bash
+
+# Stuff to reduce image size.
+USER root
+RUN apt-get clean -y \
+ && apt-get autoclean -y \
+ && apt-get autoremove -y \
+ && rm -rf /var/lib/apt/lists/*
+ 
+USER fd2dev
 
 # Run the startup.bash script to ensure that file permissions are correct
 # and that the VNC and noVNC servers are running.
