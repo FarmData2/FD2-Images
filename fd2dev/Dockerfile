@@ -59,6 +59,9 @@ RUN codium --install-extension vue.volar \
   && codium --install-extension timonwong.shellcheck \
   && codium --install-extension mkhl.shfmt
 
+# Install shfmt - shell script formattter.
+RUN curl -sS https://webinstall.dev/shfmt | bash
+
 # Add project bin to the path
 RUN echo "" >> .bashrc \
   && echo "export PATH=$PATH:~/FarmData2/bin" >> ~/.bashrc
