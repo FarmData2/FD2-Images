@@ -52,11 +52,12 @@ USER fd2dev
 WORKDIR /home/fd2dev
 
 # Install some additional VSCodium extensions
-# Code Spell Check and Markdown preview are in base image.
+# Note: Code Spell Check and Markdown preview are in base image.
 RUN codium --install-extension vue.volar \
   && codium --install-extension dbaeumer.vscode-eslint \
   && codium --install-extension esbenp.prettier-vscode \
-  && codium --install-extension timonwong.shellcheck
+  && codium --install-extension timonwong.shellcheck \
+  && codium --install-extension mkhl.shfmt
 
 # Add project bin to the path
 RUN echo "" >> .bashrc \
