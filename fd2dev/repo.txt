@@ -1,1 +1,1 @@
-fd2dev:fd2.5
+fd2dev:fd2.6

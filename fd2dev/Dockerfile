@@ -5,7 +5,8 @@ USER root
 # Install some additional system software
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \ 
-     build-essential
+     build-essential \
+     zip
 
 # Install node/npm
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh \
