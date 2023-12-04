@@ -80,6 +80,10 @@ RUN mkdir /var/farmOS \
   && chown -R www-data:www-data /var/farmOS/web/sites \
   && rm -r /opt/drupal && cp -rp /var/farmOS /opt/drupal
 
+# Copy the services.yml file into the container so that
+# CORS will be enabled in the server.
+COPY services.yml /opt/drupal/web/sites/default/
+
 # Set the entrypoint.
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
