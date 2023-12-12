@@ -84,6 +84,11 @@ RUN mkdir /var/farmOS \
 # CORS will be enabled in the server.
 COPY services.yml /opt/drupal/web/sites/default/
 
+# Copy the settings.php file into the container so that the
+# default database connection information is set.
+copy settings.php /opt/drupal/web/sites/default/
+RUN chown www-data:www-data /opt/drupal/web/sites/default/settings.php
+
 # Set the entrypoint.
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
