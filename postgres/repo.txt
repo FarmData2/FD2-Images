@@ -1,1 +1,1 @@
-postgres:fd2.1
+postgres:fd2.2

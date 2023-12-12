@@ -4,4 +4,4 @@
 # We build and store our own images so that we can
 # upgrade / update in a fully controlled way.
 
-FROM postgres:12
+FROM postgres:13
