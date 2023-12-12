@@ -70,9 +70,15 @@ COPY services.yml /opt/drupal/web/sites/default/
 copy settings.php /opt/drupal/web/sites/default/
 RUN chown www-data:www-data /opt/drupal/web/sites/default/settings.php
 
-# Change the owner and group of the API keys directory.
+# Generate the API keys that are needed by FarmData2
+# Key generation as described in:
+# https://farmos.discourse.group/t/oauth2-authentication-issues-windows-iis/1368/32
 RUN mkdir /opt/drupal/keys \
- && chown www-data:www-data /opt/drupal/keys
+ && cd /opt/drupal/keys \
+ && openssl genrsa -out private.key 2048 \
+ && openssl rsa -in private.key -pubout > public.key
+COPY web.config /opt/drupal/keys
+RUN chown -R www-data:www-data /opt/drupal/keys
 
 # Set the entrypoint.
 COPY docker-entrypoint.sh /usr/local/bin/
