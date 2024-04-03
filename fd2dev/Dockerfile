@@ -16,7 +16,7 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh \
   && npm install -g create-vue
 
 # Install extensions into firefox.
-# Add: JsonView, Hoppscotch, Vue.JS Devtools, enlight and undisposition
+# Add: JsonView, Hoppscotch, Vue.JS Devtools, enlight, undisposition, Vue force dev
 RUN cd /usr/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384} \
   && wget https://addons.mozilla.org/firefox/downloads/file/4115735/jsonview-2.4.2.xpi \
   && mv jsonview-2.4.2.xpi jsonview@brh.numbera.com.xpi \
@@ -27,7 +27,9 @@ RUN cd /usr/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384} \
   && wget https://addons.mozilla.org/firefox/downloads/file/3797995/enlight-2.7.11.0.xpi \
   && mv enlight-2.7.11.0.xpi enlight_highlightjs@jetpack.xpi \
   && wget https://addons.mozilla.org/firefox/downloads/file/4019924/undisposition_racle_fork-0.0.6.xpi \
-  && mv undisposition_racle_fork-0.0.6.xpi {39919541-b8e1-4e50-a249-043d2326ef5e}.xpi
+  && mv undisposition_racle_fork-0.0.6.xpi {39919541-b8e1-4e50-a249-043d2326ef5e}.xpi \
+  && wget https://addons.mozilla.org/firefox/downloads/file/4244504/vue_force_dev-1.4.0.xpi \
+  && mv vue_force_dev-1.4.0.xpi {a293603d-51d6-40f3-8d85-26d2c9610ae2}.xpi
 
 # Add environment variable to /etc/profile so that VSCodium
 # launches on Windows with WSL without a warning.
