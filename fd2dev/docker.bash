@@ -18,4 +18,5 @@ apt install -y --no-install-recommends \
     docker-ce \
     docker-ce-cli \
     containerd.io \
-    docker-compose-plugin
+    docker-compose-plugin \
+    docker-buildx-plugin

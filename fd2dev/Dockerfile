@@ -1,5 +1,8 @@
 FROM farmdata2/fd2-vnc-novnc-base:1.2.1
 
+# Username for the non-root user in the farmdata2/fd2-vnc-novnc-base container.
+ARG USERNAME=fd2dev
+
 USER root
 
 # Install some additional system software
