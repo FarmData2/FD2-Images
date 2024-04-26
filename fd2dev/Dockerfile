@@ -49,6 +49,11 @@ COPY gh.bash .
 RUN ./gh.bash \
   && rm gh.bash
 
+# Install the vale prose linter
+COPY vale.bash .
+RUN ./vale.bash \
+  && rm vale.bash
+
 # Modify the default umask for the sytsem so that when files
 # or directories are created the group has RW permisison as
 # well as the owner.  That will ensure tha that any new files
@@ -67,7 +72,8 @@ RUN codium --install-extension vue.volar \
   && codium --install-extension dbaeumer.vscode-eslint \
   && codium --install-extension esbenp.prettier-vscode \
   && codium --install-extension timonwong.shellcheck \
-  && codium --install-extension mkhl.shfmt
+  && codium --install-extension mkhl.shfmt \
+  && codium --install-extension errata-ai.vale-server
 
 # Install shfmt - shell script formattter.
 RUN curl -sS https://webinstall.dev/shfmt | bash
