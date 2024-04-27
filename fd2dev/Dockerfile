@@ -1,4 +1,4 @@
-FROM farmdata2/fd2-vnc-novnc-base:1.2.1
+FROM farmdata2/fd2-vnc-novnc-base:1.3.0
 
 # Username for the non-root user in the farmdata2/fd2-vnc-novnc-base container.
 ARG USERNAME=fd2dev
@@ -66,14 +66,18 @@ RUN ./umask.bash \
 USER fd2dev
 WORKDIR /home/fd2dev
 
+# Newer versions of VSCodium break the the ability to install
+# extensions in multi-architecture builds. So we don't do 
+# that anymore and rely on the .vscode/extensions.json to 
+# specify the extensions to install and then install those later.
+
 # Install some additional VSCodium extensions
 # Note: Code Spell Check and Markdown preview are in base image.
-RUN codium --install-extension vue.volar \
-  && codium --install-extension dbaeumer.vscode-eslint \
-  && codium --install-extension esbenp.prettier-vscode \
-  && codium --install-extension timonwong.shellcheck \
-  && codium --install-extension mkhl.shfmt \
-  && codium --install-extension errata-ai.vale-server
+# RUN codium --install-extension vue.volar \
+#   && codium --install-extension dbaeumer.vscode-eslint \
+#   && codium --install-extension esbenp.prettier-vscode \
+#   && codium --install-extension timonwong.shellcheck \
+#   && codium --install-extension mkhl.shfmt
 
 # Install shfmt - shell script formattter.
 RUN curl -sS https://webinstall.dev/shfmt | bash
