@@ -1,4 +1,7 @@
-FROM farmdata2/fd2-vnc-novnc-base:1.2.1
+FROM farmdata2/fd2-vnc-novnc-base:1.3.0
+
+# Username for the non-root user in the farmdata2/fd2-vnc-novnc-base container.
+ARG USERNAME=fd2dev
 
 USER root
 
@@ -46,6 +49,11 @@ COPY gh.bash .
 RUN ./gh.bash \
   && rm gh.bash
 
+# Install the vale prose linter
+COPY vale.bash .
+RUN ./vale.bash \
+  && rm vale.bash
+
 # Modify the default umask for the sytsem so that when files
 # or directories are created the group has RW permisison as
 # well as the owner.  That will ensure tha that any new files
@@ -58,13 +66,18 @@ RUN ./umask.bash \
 USER fd2dev
 WORKDIR /home/fd2dev
 
+# Newer versions of VSCodium break the the ability to install
+# extensions in multi-architecture builds. So we don't do 
+# that anymore and rely on the .vscode/extensions.json to 
+# specify the extensions to install and then install those later.
+
 # Install some additional VSCodium extensions
 # Note: Code Spell Check and Markdown preview are in base image.
-RUN codium --install-extension vue.volar \
-  && codium --install-extension dbaeumer.vscode-eslint \
-  && codium --install-extension esbenp.prettier-vscode \
-  && codium --install-extension timonwong.shellcheck \
-  && codium --install-extension mkhl.shfmt
+# RUN codium --install-extension vue.volar \
+#   && codium --install-extension dbaeumer.vscode-eslint \
+#   && codium --install-extension esbenp.prettier-vscode \
+#   && codium --install-extension timonwong.shellcheck \
+#   && codium --install-extension mkhl.shfmt
 
 # Install shfmt - shell script formattter.
 RUN curl -sS https://webinstall.dev/shfmt | bash

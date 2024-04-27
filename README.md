@@ -25,7 +25,13 @@ Multiple images can be built with a single command by listing each of their dire
 
 To build multi architecture images:
 * Use `docker login` to log into dockerhub as `farmdata2`.
-* Use the commands as above but omit the `-d` flag.
+* Use the commands as above but:
+  - omit the `-d` flag.
+  - add the `-p` flag.
+  
+```
+./build-images.bash -p fd2dev
+```
 
 Notes:
 * Logging in to dockerhub as `farmdata2` requires authentication that is available only to project maintainers.

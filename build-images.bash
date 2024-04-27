@@ -6,14 +6,16 @@
 DOCKER_HUB_USER="farmdata2"
 PLATFORMS=linux/amd64,linux/arm64
 
-# Check for the local build flag -d
 LOCAL_BUILD=0
-getopts 'd' opt 2> /dev/null
-if [ $opt == 'd' ];
-then 
-  LOCAL_BUILD=1
-  shift
-fi
+PUSH=0
+while getopts ":dp:" opt
+do
+  case $opt in
+    d) LOCAL_BUILD=1;;
+    p) PUSH=1;;
+    *) echo "Invalid option: -$opt";;
+  esac
+done
 
 if [ $# -lt 1 ];
 then
@@ -24,37 +26,45 @@ then
   exit 255
 fi
 
-# Only check the login and make the builder if we are pushing the images.
-if [ $LOCAL_BUILD == 0 ];
+# Only check the login if we are pushing the images.
+if [ "$LOCAL_BUILD" = "0" ] && [ "$PUSH" = "1" ];
 then
-
-    # Check that the DockerHub user identified above is logged in.
+  # Check that the DockerHub user identified above is logged in.
+  if [ "$(which docker-credential-desktop)" != "" ];
+  then
     LOGGED_IN=$(docker-credential-desktop list | grep "$DOCKER_HUB_USER" | wc -l | cut -f 8 -d ' ')
-    if [ "$LOGGED_IN" == "0" ];
-    then
-        echo "Please log into Docker Hub as $DOCKER_HUB_USER before building images."
-        echo "  Use: docker login"
-        echo "This allows multi architecture images to be pushed."
-        exit 255
-    fi
+  else
+    LOGGED_IN=$(docker system info | grep -E 'Username|Registry' | grep "$DOCKER_HUB_USER" | wc -l | cut -f 8 -d ' ')
+  fi
 
-    # Create the builder if it doesn't exist.
-    FD2_BUILDER=$(docker buildx ls | grep "fd2builder" | wc -l | cut -f 8 -d ' ')
-    if [ "$FD2_BUILDER" == "0" ];
-    then
-        echo "Making new builder for FarmData2 images."
-        docker buildx create --name fd2builder
-    fi
+  if [ "$LOGGED_IN" = "0" ];
+  then
+    echo "Please log into Docker Hub as $DOCKER_HUB_USER before building images."
+    echo "  Use: docker login"
+    echo "This allows multi architecture images to be pushed."
+    exit 255
+  fi
+fi
 
-    # Switch to use the fd2builder.
-    echo "Using the fd2bilder."
-    docker buildx use fd2builder
+if [ "$LOCAL_BUILD" = "0" ];
+then
+  # Create the builder if it doesn't exist.
+  FD2_BUILDER=$(docker buildx ls | grep "fd2builder" | wc -l | cut -f 8 -d ' ')
+  if [ "$FD2_BUILDER" = "0" ];
+  then
+    echo "Making new builder for FarmData2 images."
+    docker buildx create --name fd2builder
+  fi
+
+  # Switch to use the fd2builder.
+  echo "Using the fd2bilder."
+  docker buildx use fd2builder
 fi
 
 # Build and push each of the images to Docker Hub.
 for IMAGE in "$@"
 do
-  if [ ! -f $IMAGE/Dockerfile ] | [ ! -f $IMAGE/repo.txt ];
+  if [ ! -f "$IMAGE"/Dockerfile ] | [ ! -f "$IMAGE"/repo.txt ];
   then
     echo "Error: $IMAGE/Dockerfile or $IMAGE/repo.txt does not exit."
     echo "       Skipping $IMAGE"
@@ -73,13 +83,17 @@ do
     REPO="$DOCKER_HUB_USER/$TAG"
     echo "  Performing docker build using tag $REPO ..."
 
-    if [ $LOCAL_BUILD == 1 ];
+    if [ "$LOCAL_BUILD" = "1" ];
     then
       echo "  Building image locally."
-      docker build  -t $REPO .
+      docker build -t "$REPO" .
+    elif [ "$PUSH" = "0" ];
+    then
+      echo "  Building multi architecture image."
+      docker buildx build --platform "$PLATFORMS" -t "$REPO" .
     else
       echo "  Building multi architecture image and pushing to dockerhub."
-      docker buildx build --platform $PLATFORMS -t $REPO --push .
+      docker buildx build --platform "$PLATFORMS" -t "$REPO" --push .
     fi
 
     if [ -f after.bash ];
