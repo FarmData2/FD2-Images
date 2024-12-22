@@ -10,7 +10,8 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \ 
      build-essential \
      zip \
-     jq
+     jq \
+     ncat
 
 # Install node/npm
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh \
