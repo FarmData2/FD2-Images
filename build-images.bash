@@ -15,6 +15,7 @@ do
     p) PUSH=1;;
     *) echo "Invalid option: -$opt";;
   esac
+  shift
 done
 
 if [ $# -lt 1 ];
