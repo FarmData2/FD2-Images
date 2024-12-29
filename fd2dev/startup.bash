@@ -15,7 +15,7 @@ fi
 # If a group with that GID already exists in the container use it.
 # Otherwise create a new fd2docker group with that GID in the container.
 echo "Establishing docker/fd2docker group in the container."
-HOST_DOCKER_GID=$(cat ~/.fd2/gids/docker.gid)
+HOST_DOCKER_GID=$(cat ~/FarmData2/.fd2/gids/docker.gid)
 HOST_DOCKER_GID_IN_CONTAINER=$(echo /etc/group | grep ":$HOST_DOCKER_GID:")
 if [ -z "$HOST_DOCKER_GID_IN_CONTAINER" ];
 then
@@ -37,7 +37,7 @@ echo "fd2dev" | sudo -S chmod g+rwx /var/run/docker.sock
 # If a group with tht GID already exists in the container use it.
 # Otherwise create a new fd2grp group with that GID in the container.
 echo "Establishing the fd2grp in the container."
-HOST_FD2GRP_GID=$(cat ~/.fd2/gids/fd2grp.gid)
+HOST_FD2GRP_GID=$(cat ~/FarmData2/.fd2/gids/fd2grp.gid)
 HOST_FD2GRP_GID_IN_CONTAINER=$(echo /etc/group | grep ":$HOST_FD2GRP_GID:")
 if [ -z "$HOST_FD2GRP_GID_IN_CONTAINER" ];
 then

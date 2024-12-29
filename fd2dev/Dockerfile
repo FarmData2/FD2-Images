@@ -114,4 +114,4 @@ USER fd2dev
 
 # Run the startup.bash script to ensure that file permissions are correct
 # and that the VNC and noVNC servers are running.
-ENTRYPOINT ./.contconf/startup.bash
+ENTRYPOINT ["./.contconf/startup.bash"]
