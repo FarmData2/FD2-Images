@@ -11,7 +11,8 @@ RUN apt-get update \
      build-essential \
      zip \
      jq \
-     ncat
+     ncat \
+     inotify-tools
 
 # Install node/npm
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh \
@@ -68,7 +69,7 @@ RUN ./umask.bash \
 USER fd2dev
 WORKDIR /home/fd2dev
 
-# Newer versions of VSCodium break the the ability to install
+# Newer versions of VSCodium break thes ability to install
 # extensions in multi-architecture builds. So we don't do 
 # that anymore and rely on the .vscode/extensions.json to 
 # specify the extensions to install and then install those later.
