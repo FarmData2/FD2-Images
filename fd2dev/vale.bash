@@ -1,7 +1,7 @@
 cd /var/tmp
 
 ARCH=$(dpkg --print-architecture)
-VER="3.4.1"
+VER="3.9.2"
 
 if [ "$ARCH" = "arm64" ]; then
     VALE_FILE=vale_"$VER"_Linux_arm64.tar.gz
