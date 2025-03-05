@@ -52,11 +52,6 @@ COPY gh.bash .
 RUN ./gh.bash \
   && rm gh.bash
 
-# Install the vale prose linter
-COPY vale.bash .
-RUN ./vale.bash \
-  && rm vale.bash
-
 # Modify the default umask for the sytsem so that when files
 # or directories are created the group has RW permisison as
 # well as the owner.  That will ensure tha that any new files
