@@ -1,5 +1,5 @@
 # Use the official Drupal 10 image to build GEOS PHP extension.
-FROM drupal:10.1 as php-dependencies
+FROM drupal:10.1 AS php-dependencies
 
 # Build and install the GEOS PHP extension.
 # See https://git.osgeo.org/gitea/geos/php-geos
@@ -67,7 +67,7 @@ COPY services.yml /opt/drupal/web/sites/default/
 
 # Copy the settings.php file into the container so that the
 # default database connection information is set.
-copy settings.php /opt/drupal/web/sites/default/
+COPY settings.php /opt/drupal/web/sites/default/
 RUN chown www-data:www-data /opt/drupal/web/sites/default/settings.php
 
 # Generate the API keys that are needed by FarmData2
