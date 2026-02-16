@@ -4,6 +4,14 @@ A collection of tools for building the docker images used by the FarmData2 devel
 
 ## Usage:
 
+### Setup
+
+1. Ensure that the FarmData2 Development environment is running in a Codespace.
+2. Clone this repository into the home directory along side FarmData2
+3. Create or use an existing GitHub PAT to access this repository.
+4. `export GITHUB_TOKEN=<your PAT>`
+5. Follow the relevant directions below.
+
 ### Local Builds for Development of Images
 
 The following command will build the image described by the `Dockerfile` in `<dir>` for the architecture of the host machine.
