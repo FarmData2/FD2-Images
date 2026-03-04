@@ -3,8 +3,12 @@
 # Build and push to DockerHub multi architecture images
 # for all of the containers used by FarmData2.
 
+REPO_DIR=$(git rev-parse --show-toplevel)
 DOCKER_HUB_USER="farmdata2"
 PLATFORMS=linux/amd64,linux/arm64
+
+# Make sure we can connect to the Docker daemon.
+source "$REPO_DIR/lib/checkDocker.bash"
 
 LOCAL_BUILD=0
 PUSH=0
@@ -31,35 +35,13 @@ fi
 if [ "$LOCAL_BUILD" = "0" ] && [ "$PUSH" = "1" ];
 then
   # Check that the DockerHub user identified above is logged in.
-  if [ "$(which docker-credential-desktop)" != "" ];
-  then
-    LOGGED_IN=$(docker-credential-desktop list | grep "$DOCKER_HUB_USER" | wc -l | cut -f 8 -d ' ')
-  else
-    LOGGED_IN=$(docker system info | grep -E 'Username|Registry' | grep "$DOCKER_HUB_USER" | wc -l | cut -f 8 -d ' ')
-  fi
-
-  if [ "$LOGGED_IN" = "0" ];
-  then
-    echo "Please log into Docker Hub as $DOCKER_HUB_USER before building images."
-    echo "  Use: docker login"
-    echo "This allows multi architecture images to be pushed."
-    exit 255
-  fi
+  source "$REPO_DIR/lib/dockerhubLogin.bash"
 fi
 
 if [ "$LOCAL_BUILD" = "0" ];
 then
   # Create the builder if it doesn't exist.
-  FD2_BUILDER=$(docker buildx ls | grep "fd2builder" | wc -l | cut -f 8 -d ' ')
-  if [ "$FD2_BUILDER" = "0" ];
-  then
-    echo "Making new builder for FarmData2 images."
-    docker buildx create --name fd2builder
-  fi
-
-  # Switch to use the fd2builder.
-  echo "Using the fd2bilder."
-  docker buildx use fd2builder
+  source "$REPO_DIR/lib/makeBuilder.bash"
 fi
 
 # Build and push each of the images to Docker Hub.
