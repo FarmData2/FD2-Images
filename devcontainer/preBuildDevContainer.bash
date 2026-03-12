@@ -2,7 +2,7 @@
 
 # This script will build the dev container and optionally
 # push it to DockerHub.  To push to docker hub it is necessary
-# to be logged into dockerhub via docker as a farmdata2 admin.
+# to be logged into dockerhub via docker as a FarmData2 admin.
 
 function usage {
   echo ""
