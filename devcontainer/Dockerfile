@@ -6,6 +6,7 @@ RUN apt update \
     build-essential \
     zip \
     jq \
+    qemu-system \
   && apt-get clean -y \
   && apt-get autoclean -y \
   && apt-get autoremove -y \

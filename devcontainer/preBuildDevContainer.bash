@@ -7,11 +7,8 @@
 function usage {
   echo ""
   echo "preBuildDevContainer.bash Usage:"
-  echo "  -b | --build: Build but do not push the image."
-  echo "  -p | --push: Push the most recently built image image to dockerhub."
-  echo "          If --build is specified the built image is pushed."
-  echo "          Otherwise push the previously built image if one exists."
-  echo "          Note: Requires farmdata2 admin login for dockerhub."
+  echo " -m | --multi: Build the multi-architecture image and push to dockerhub."
+  echo " -d | --debug: Build the amd64 image but do not push."
   echo " -n | --no-cache: Build the image without using Docker cache."
   echo " -h | --help: Display this message."
   echo ""
@@ -28,13 +25,26 @@ TAG=$(cat repo.txt)
 DOCKER_HUB_USER="farmdata2"
 REPO="$DOCKER_HUB_USER/$TAG"
 #PLATFORMS=linux/amd64
-PLATFORMS=linux/arm64
-#PLATFORMS=linux/amd64,linux/arm64
+#PLATFORMS=linux/arm64
+PLATFORMS=linux/amd64,linux/arm64
+EMULATORS=arm64
 
 DEVCONTAINER_PATH=devcontainer.json
 
 # Make sure we can connect to the Docker daemon.
 source "$REPO_DIR/lib/checkDocker.bash"
+
+
+#
+# Need to rework this to use the -d and -m flags.
+# If -d then set the platform to just amd64 and push to false.
+# If -m then set the platform to all of them, push to true, register the emulator, check for dockerhub login.
+# Then be sure the pushing is handled correctly.
+# 
+
+# Register the necessary emulators with docker for the multi-architecture build.
+docker run --privileged --rm tonistiigi/binfmt --install "$EMULATORS" 2> /dev/null
+quit
 
 PUSH=0
 BUILD=0
@@ -76,6 +86,12 @@ while true; do
   esac
 done
 
+# Only check the login if we are pushing the image.
+if [ "$PUSH" = "1" ]; then
+  # Check that the DockerHub user identified above is logged in.
+  source "$REPO_DIR/lib/dockerhubLogin.bash"
+fi
+
 if [ "$BUILD" = "1" ]; then
   echo "Building dev container image for platforms: $PLATFORMS"
 
@@ -88,7 +104,7 @@ if [ "$BUILD" = "1" ]; then
       --config "$DEVCONTAINER_PATH" \
       --image-name "$REPO" \
       --platform "$PLATFORMS" \
-      --push false \
+      --push true \
       --no-cache
   else
     devcontainer build \
@@ -96,16 +112,7 @@ if [ "$BUILD" = "1" ]; then
       --config "$DEVCONTAINER_PATH" \
       --image-name "$REPO" \
       --platform "$PLATFORMS" \
-      --push false
+      --push true
   fi
 fi
 
-# Only check the login if we are pushing the image.
-if [ "$PUSH" = "1" ]; then
-  echo "Pushing $REPO image to dockerhub..."
-  # Check that the DockerHub user identified above is logged in.
-  source "$REPO_DIR/lib/dockerhubLogin.bash"
-
-  docker push "$REPO"
-  echo "Pushed."
-fi
