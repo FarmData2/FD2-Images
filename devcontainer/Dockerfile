@@ -1,4 +1,8 @@
-FROM mcr.microsoft.com/devcontainers/javascript-node:4-24-bookworm
+#FROM mcr.microsoft.com/devcontainers/javascript-node:4-24-bookworm
+
+# Use the default dev container image so that GitHub doesn't charge for its storage.
+# See: https://docs.github.com/en/codespaces/troubleshooting/troubleshooting-included-usage#storage-usage-for-your-base-dev-container
+FROM mcr.microsoft.com/devcontainers/universal:5.1.4-linux
 
 # Install additional packages needed for the development environment.
 RUN apt update \
@@ -12,7 +16,7 @@ RUN apt update \
 # ensure proper permissions to the mounted docker/db directory.
 ARG USERNAME=fd2dev
 ARG USER_UID=999
-ARG USER_GID=1001
+ARG USER_GID=1002
 
 RUN groupadd --gid $USER_GID $USERNAME \
   && useradd --uid $USER_UID --gid $USER_GID -s /bin/bash -m $USERNAME \

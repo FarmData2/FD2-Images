@@ -1,10 +1,11 @@
 {
   "name": "FD2-Images Prebuild",
-  "image": "mcr.microsoft.com/devcontainers/base:debian-12",
+  "image": "mcr.microsoft.com/devcontainers/universal:5.1-linux",
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-    "ghcr.io/devcontainers/features/devcontainer-cli:1": {}
+    "ghcr.io/devcontainers/features/node:1": {}
   },
+  "postCreateCommand": "./.devcontainer/postCreate.bash",
   "customizations": {
     "vscode": {
       "settings": {
