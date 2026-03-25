@@ -38,11 +38,6 @@ RUN echo "" >> /home/$USERNAME/.bashrc \
 RUN rm /bin/dash \
   && ln -s /bin/bash /bin/dash
 
-# Install the devcontainer CLI globally.
-# Tried installing as devcontainer feature in devcontainer.json,
-# but there was an architecture mismatch that caused builds to fail.
-RUN npm install -g @devcontainers/cli
-
 RUN apt-get clean -y \
   && apt-get autoclean -y \
   && apt-get autoremove -y \
