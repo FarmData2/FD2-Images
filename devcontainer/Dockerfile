@@ -5,11 +5,7 @@ RUN apt update \
   && apt install -y --no-install-recommends \
     build-essential \
     zip \
-    jq \
-  && apt-get clean -y \
-  && apt-get autoclean -y \
-  && apt-get autoremove -y \
-  && rm -rf /var/lib/apt/lists/*
+    jq
 
 # Create a non-root user with UID that matches the UID of
 # the postgres user in the fd2_postgres container.  This
@@ -41,5 +37,15 @@ RUN echo "" >> /home/$USERNAME/.bashrc \
 # link it to /bin/bash instead so bash runs in fluxbox terminal..
 RUN rm /bin/dash \
   && ln -s /bin/bash /bin/dash
+
+# Install the devcontainer CLI globally.
+# Tried installing as devcontainer feature in devcontainer.json,
+# but there was an architecture mismatch that caused builds to fail.
+RUN npm install -g @devcontainers/cli
+
+RUN apt-get clean -y \
+  && apt-get autoclean -y \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/*
 
 USER $USERNAME

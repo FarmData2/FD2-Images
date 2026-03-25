@@ -6,24 +6,22 @@ A collection of tools for building the devcontainer and sidecar docker images us
 
 ### Setup
 
-1. Ensure that the FarmData2 Development environment is running in a Codespace.
-   - If you will be building multi-architecture images create the codespace as a 4-core machine.
-2. Clone this repository into the home directory along side FarmData2
-3. Create or use an existing GitHub PAT to access this repository.
-4. `export GITHUB_TOKEN=<your PAT>`
-5. Follow the relevant directions below.
+1. Create a new Codespace from this repository (or from your own fork).
+2. Follow the relevant directions below.
 
 ### Building the Devcontainer Image
 
-The devcontainer image is the main image used in codespaces or in VSCode.  It contains all of the necessary dependencies for setting up the development environment and running the sidecar containers.
+The devcontainer image is the main image used in FarmData2 development environment either in a Codespace or in VSCode.  It contains all of the necessary dependencies for setting up the development environment and running the sidecar containers.
 
-1. `cd devcontainer`
-2. edit `repo.txt` to update the version number for the image.
-3. `./preBuildDevcontainer.bash --build --push`
-   - Using `--push` requires logging into dockerhub as `farmdata2` as a project maintainer.
-   - Omit `--push` to test the build without pushing.
-   - Use with just `--push` to push an already built image.
-   - Use `--no-cache` to rebuild without docker cache for image layers.
+1. `cd devcontainer` (Note: Not `.devcontainer`).
+2. Edit `repo.txt` in `devcontainer` to update the version number for the image.
+3. `./preBuildDevcontainer.bash --multi-arch`
+   - Options include:
+     - `--multi-arch` - will build the image for all architectures listed in `preBuildDevcontainer.bash` and push to dockerhub.
+     - `--debug` - will build just the `amd64` image and will not push to dockerhub.
+       - Note: Only one or the other of `--debug` or `--multi-arch` may be specified.
+     - `--no-cache` - will not use the Docker build cache.
+     - `--help` - will display information about all options.
 4. Edit and commit the `.devcontainer/devcontainer.json` file in `FarmData2` to use the new image.
 
 ### Building Sidecar Images

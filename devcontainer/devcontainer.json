@@ -21,7 +21,6 @@
     "ghcr.io/devcontainers-extra/features/shellcheck:1": {},
     "ghcr.io/shinepukur/devcontainer-features/vale:1": {
       "version": "3.9.6"
-    },
-    "ghcr.io/devcontainers-extra/features/devcontainers-cli:1": {}
+    }
   }
 }
