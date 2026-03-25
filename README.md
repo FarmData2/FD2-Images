@@ -21,10 +21,9 @@ The devcontainer image is the main image used in FarmData2 development environme
      - `--amd64` (`-a`) - will build the `amd64` image and push it to dockerhub. This is the default behavior if no option is specified.
      - `--no-cache` (`-n`) - will not use the Docker build cache.
      - `--help` (`-h`) - will display information about all options.
-4. Edit and commit the `.devcontainer/devcontainer.json` file in `FarmData2` to use the new image.
+4. Edit and commit the `.devcontainer/devcontainer.json` file in `FarmData2` to use the new image spedified in `repo.txt`.
 
 ### Building Sidecar Images
-
 
 The sidecar images provide the services necessary to run farmOS and thus FarmData2.  These include the postgres database, the farmOS server and an nginx reverse proxy to provide access to farmOS via https.
 
