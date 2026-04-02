@@ -15,13 +15,17 @@ The devcontainer image is the main image used in FarmData2 development environme
 
 1. `cd devcontainer` (Note: Not `.devcontainer`).
 2. Edit `repo.txt` in `devcontainer` to update the version number for the image.
-3. `./preBuildDevcontainer.bash`
+3. `docker image ls`
+4. `docker image rm ...` 
+   - Remove all images to ensure there is sufficent disk space for the build.
+   - If disk space issues still arrise use: `docker system prune -a --volumes -f`
+5. `./preBuildDevcontainer.bash`
    - Options include:
      - `--debug` (`-d`) - will build just the `amd64` image and will not push to dockerhub.
      - `--amd64` (`-a`) - will build the `amd64` image and push it to dockerhub. This is the default behavior if no option is specified.
      - `--no-cache` (`-n`) - will not use the Docker build cache.
      - `--help` (`-h`) - will display information about all options.
-4. Edit and commit the `.devcontainer/devcontainer.json` file in `FarmData2` to use the new image spedified in `repo.txt`.
+6. Edit and commit the `.devcontainer/devcontainer.json` file in `FarmData2` to use the new image spedified in `repo.txt`.
 
 ### Building Sidecar Images
 
