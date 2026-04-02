@@ -28,8 +28,7 @@ RUN apt update \
 # ensure proper permissions to the mounted docker/db directory
 # and that the user can access /var/run/docker.sock.
 ARG USERNAME=fd2dev
-#ARG USER_UID=999 # Works with bookworm
-ARG USER_UID=1001 # for slim
+ARG USER_UID=999 # matches UID in postgres container.
 ARG USER_GID=1001
 
 # RUN groupadd --gid $USER_GID $USERNAME \
@@ -38,10 +37,9 @@ ARG USER_GID=1001
 #   && chmod 0440 /etc/sudoers.d/$USERNAME
 
 RUN groupadd --gid $USER_GID $USERNAME \
-  && useradd --uid $USER_UID --gid $USER_GID -s /bin/bash -m $USERNAME \
-  && usermod -aG sudo $USERNAME
-  # && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-  # && chmod 0440 /etc/sudoers.d/$USERNAME
+  && useradd --system --uid $USER_UID --gid $USER_GID -s /bin/bash -m $USERNAME \
+  && usermod -aG sudo $USERNAME \
+  && echo "$USERNAME ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USERNAME
 
 # Set the node version to be used.
 # And make sure that node will run with a self-signed certificate.
