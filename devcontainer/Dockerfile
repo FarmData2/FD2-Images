@@ -9,6 +9,7 @@ RUN apt update \
     sudo \
     git \
     openssl \
+    less \
   && apt-get clean -y \
   && apt-get autoclean -y \
   && apt-get autoremove -y \
